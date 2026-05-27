@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Acceso · Oficio Local Luján</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --azul: #1B2E4B; --azul-medio: #2C4A72; --amarillo: #E8B84B; --blanco-roto: #F4F1EA; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--blanco-roto); font-family: 'Barlow', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+    .header { background: var(--azul); padding: 1.5rem; text-align: center; }
+    .logo-nombre { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
+    .logo-ciudad { font-size: 11px; color: var(--amarillo); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-top: 4px; }
+    .container { max-width: 420px; margin: 3rem auto; padding: 0 1.5rem; width: 100%; }
+    .plan-elegido { background: #DCF0E4; border: 1px solid #25D366; border-radius: 3px; padding: 10px 14px; font-size: 13px; color: #1A4A2A; font-weight: 600; margin-bottom: 1.5rem; text-align: center; display: none; }
+    .tabs { display: flex; border-bottom: 2px solid var(--azul); margin-bottom: 2rem; }
+    .tab { flex: 1; padding: 0.75rem; text-align: center; font-weight: 600; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: #888; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+    .tab.active { color: var(--azul); border-bottom-color: var(--amarillo); }
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--azul); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+    input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 3px; font-size: 15px; font-family: 'Barlow', sans-serif; background: #fff; transition: border 0.15s; }
+    input:focus { outline: none; border-color: var(--azul); }
+    .btn { width: 100%; padding: 12px; background: var(--azul); color: #fff; border: none; border-radius: 3px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: 'Barlow', sans-serif; transition: background 0.15s; margin-top: 0.5rem; }
+    .btn:hover { background: var(--azul-medio); }
+    .btn-olvide { width: 100%; padding: 10px; background: transparent; color: var(--azul); border: none; font-size: 12px; cursor: pointer; font-family: 'Barlow', sans-serif; margin-top: 0.75rem; text-decoration: underline; }
+    .mensaje { padding: 12px; border-radius: 3px; font-size: 13px; margin-top: 1rem; display: none; }
+    .mensaje.ok { background: #DCF0E4; color: #1A4A2A; display: block; }
+    .mensaje.error { background: #F5DCDC; color: #4A1A1A; display: block; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .volver { display: inline-block; margin-top: 1.5rem; font-size: 13px; color: var(--azul); text-decoration: none; }
+    .ayuda { text-align: center; margin-top: 2rem; font-size: 12px; color: #999; }
+    .ayuda a { color: #999; text-decoration: none; }
+    .ayuda a:hover { color: var(--azul); }
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="logo-nombre">Oficio Local</div>
+  <div class="logo-ciudad">Luján · Buenos Aires</div>
+</header>
+<div class="container">
+  <div class="plan-elegido" id="aviso-plan"></div>
+  <div class="tabs">
+    <div class="tab active" onclick="mostrarPanel('login')">Ingresar</div>
+    <div class="tab" onclick="mostrarPanel('registro')">Registrarse</div>
+  </div>
+
+  <div id="panel-login" class="panel active">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="tu@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••"/>
+    </div>
+    <button class="btn" onclick="login()">Ingresar</button>
+    <button class="btn-olvide" onclick="olvideClave()">Olvidé mi contraseña</button>
+    <div id="login-msg" class="mensaje"></div>
+  </div>
+
+  <div id="panel-registro" class="panel">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="reg-email" placeholder="tu@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"/>
+    </div>
+    <button class="btn" onclick="registro()">Crear cuenta</button>
+    <div id="reg-msg" class="mensaje"></div>
+  </div>
+
+  <a href="index.html" class="volver">← Volver al directorio</a>
+
+  <div class="ayuda">
+    ¿Tenés alguna consulta? <a href="https://wa.me/5492324477461?text=Hola%20Marcos%2C%20tengo%20una%20consulta%20sobre%20Oficio%20Local%20Luj%C3%A1n." target="_blank">Escribile a Marcos</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://bbfhxvvwqcsjwntgyqiy.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_QQBySJVAdsf5AraYE0Kb5A_qVJCH3yd';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const params = new URLSearchParams(window.location.search);
+  const planElegido = params.get('plan') || 'presencia';
+
+  const esComercio = planElegido.includes('-comercio');
+  const planBase = planElegido.replace('-comercio', '');
+
+  const MP_PLANES = {
+    'visible': '9501eaf664b442cfb2e166a13b986a14',
+    'visible-especialista': '9501eaf664b442cfb2e166a13b986a14',
+    'destacado': '65e342ea21414ea783db0e584b379f88',
+    'destacado-especialista': '65e342ea21414ea783db0e584b379f88',
+    'visible-comercio': 'e8fac56f66a34ae8889c8b071c632f5a',
+    'destacado-comercio': 'f0d1a9683fa94eb6a6beb28a0564d256'
+  };
+
+  const PLANES_LABEL = {
+    presencia: 'Plan Presencia — Gratis',
+    visible: 'Plan Visible — $5.000/mes',
+    'visible-especialista': 'Plan Visible — $5.000/mes',
+    destacado: 'Plan Destacado — $8.000/mes',
+    'destacado-especialista': 'Plan Destacado — $8.000/mes',
+    'visible-comercio': 'Plan Visible Comercio — $12.000/mes',
+    'destacado-comercio': 'Plan Destacado Comercio — $15.000/mes'
+  };
+
+  if (planElegido && planElegido !== 'presencia') {
+    const aviso = document.getElementById('aviso-plan');
+    aviso.style.display = 'block';
+    aviso.textContent = '✅ Plan seleccionado: ' + (PLANES_LABEL[planElegido] || planElegido);
+    mostrarTabRegistro();
+  }
+
+  function mostrarTabRegistro() {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-registro').classList.add('active');
+    document.querySelectorAll('.tab')[1].classList.add('active');
+  }
+
+  function mostrarPanel(panel) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + panel).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  async function login() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    const msg = document.getElementById('login-msg');
+    msg.className = 'mensaje';
+    if (!email || !pass) { msg.className = 'mensaje error'; msg.textContent = 'Completá todos los campos.'; return; }
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) { msg.className = 'mensaje error'; msg.textContent = 'Email o contraseña incorrectos.'; }
+    else {
+      msg.className = 'mensaje ok';
+      msg.textContent = '¡Bienvenido! Redirigiendo...';
+      setTimeout(() => window.location.href = 'https://lujan.oficiolocal.com.ar/panel.html', 1500);
+    }
+  }
+
+  async function olvideClave() {
+    const email = document.getElementById('login-email').value;
+    const msg = document.getElementById('login-msg');
+    msg.className = 'mensaje';
+    if (!email) { msg.className = 'mensaje error'; msg.textContent = 'Escribí tu email arriba y después tocá este botón.'; return; }
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://lujan.oficiolocal.com.ar/resetear.html'
+    });
+    if (error) { msg.className = 'mensaje error'; msg.textContent = 'Hubo un error. Verificá el email e intentá de nuevo.'; }
+    else { msg.className = 'mensaje ok'; msg.textContent = '¡Listo! Te mandamos un email para recuperar tu contraseña.'; }
+  }
+
+  async function registro() {
+    const email = document.getElementById('reg-email').value;
+    const pass = document.getElementById('reg-pass').value;
+    const msg = document.getElementById('reg-msg');
+    msg.className = 'mensaje';
+    if (!email || !pass) { msg.className = 'mensaje error'; msg.textContent = 'Completá todos los campos.'; return; }
+    if (pass.length < 6) { msg.className = 'mensaje error'; msg.textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
+
+    const { data, error } = await sb.auth.signUp({ email, password: pass });
+    if (error) { msg.className = 'mensaje error'; msg.textContent = 'Hubo un error. Intentá de nuevo.'; return; }
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    if (esComercio) {
+      await sb.from('especialistas').update({
+        rubro_id: 'negocios',
+        rubro: 'Negocios del oficio'
+      }).eq('email_auth', email);
+    }
+
+    if (planBase === 'presencia' || planElegido === 'presencia') {
+      msg.className = 'mensaje ok';
+      msg.textContent = '¡Cuenta creada! Redirigiendo...';
+      setTimeout(() => window.location.href = 'https://lujan.oficiolocal.com.ar/panel.html?nuevo=true', 1500);
+    } else {
+      msg.className = 'mensaje ok';
+      msg.textContent = '¡Cuenta creada! Redirigiendo a MercadoPago...';
+      const mpUrl = `https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=${MP_PLANES[planElegido]}&external_reference=${encodeURIComponent(email)}`;
+      setTimeout(() => window.location.href = mpUrl, 1500);
+    }
+  }
+</script>
+</body>
+</html>
