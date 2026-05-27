@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nueva contraseña · Oficio Local Luján</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --azul: #1B2E4B; --azul-medio: #2C4A72; --amarillo: #E8B84B; --blanco-roto: #F4F1EA; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--blanco-roto); font-family: 'Barlow', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+    .header { background: var(--azul); padding: 1.5rem; text-align: center; }
+    .logo-nombre { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
+    .logo-ciudad { font-size: 11px; color: var(--amarillo); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-top: 4px; }
+    .container { max-width: 420px; margin: 3rem auto; padding: 0 1.5rem; width: 100%; }
+    .titulo { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; color: var(--azul); margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--azul); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+    input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 3px; font-size: 15px; font-family: 'Barlow', sans-serif; background: #fff; transition: border 0.15s; }
+    input:focus { outline: none; border-color: var(--azul); }
+    .btn { width: 100%; padding: 12px; background: var(--azul); color: #fff; border: none; border-radius: 3px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: 'Barlow', sans-serif; transition: background 0.15s; margin-top: 0.5rem; }
+    .btn:hover { background: var(--azul-medio); }
+    .mensaje { padding: 12px; border-radius: 3px; font-size: 13px; margin-top: 1rem; display: none; }
+    .mensaje.ok { background: #DCF0E4; color: #1A4A2A; display: block; }
+    .mensaje.error { background: #F5DCDC; color: #4A1A1A; display: block; }
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="logo-nombre">Oficio Local</div>
+  <div class="logo-ciudad">Luján · Buenos Aires</div>
+</header>
+<div class="container">
+  <h1 class="titulo">Crear nueva contraseña</h1>
+  <div class="form-group">
+    <label>Nueva contraseña</label>
+    <input type="password" id="nueva-pass" placeholder="Mínimo 6 caracteres"/>
+  </div>
+  <div class="form-group">
+    <label>Repetir contraseña</label>
+    <input type="password" id="repetir-pass" placeholder="Repetí la contraseña"/>
+  </div>
+  <button class="btn" onclick="cambiarPassword()">Guardar nueva contraseña</button>
+  <div id="msg" class="mensaje"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://bbfhxvvwqcsjwntgyqiy.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_QQBySJVAdsf5AraYE0Kb5A_qVJCH3yd';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function cambiarPassword() {
+    const nueva = document.getElementById('nueva-pass').value;
+    const repetir = document.getElementById('repetir-pass').value;
+    const msg = document.getElementById('msg');
+    msg.className = 'mensaje';
+    if (!nueva || !repetir) { msg.className = 'mensaje error'; msg.textContent = 'Completá ambos campos.'; return; }
+    if (nueva.length < 6) { msg.className = 'mensaje error'; msg.textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
+    if (nueva !== repetir) { msg.className = 'mensaje error'; msg.textContent = 'Las contraseñas no coinciden.'; return; }
+    const { error } = await sb.auth.updateUser({ password: nueva });
+    if (error) { msg.className = 'mensaje error'; msg.textContent = 'Hubo un error. El link puede haber expirado. Pedí uno nuevo.'; }
+    else {
+      msg.className = 'mensaje ok';
+      msg.textContent = '¡Contraseña actualizada! Redirigiendo...';
+      setTimeout(() => window.location.href = 'https://lujan.oficiolocal.com.ar/panel.html', 2000);
+    }
+  }
+</script>
+</body>
+</html>
