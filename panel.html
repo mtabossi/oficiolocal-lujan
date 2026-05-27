@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Panel · Oficio Local Luján</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --azul: #1B2E4B; --azul-medio: #2C4A72; --amarillo: #E8B84B; --blanco-roto: #F4F1EA; --gris-calido: #E8E4DB; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--blanco-roto); font-family: 'Barlow', sans-serif; min-height: 100vh; }
+    .header { background: var(--azul); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo-nombre { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
+    .logo-ciudad { font-size: 10px; color: var(--amarillo); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-top: 2px; }
+    .btn-salir { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); padding: 6px 14px; border-radius: 3px; font-size: 12px; font-family: 'Barlow', sans-serif; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; }
+    .btn-salir:hover { background: rgba(255,255,255,0.1); }
+    .container { max-width: 600px; margin: 2rem auto; padding: 0 1.5rem; }
+    .bienvenida { margin-bottom: 1.5rem; }
+    .bienvenida h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; color: var(--azul); font-weight: 700; }
+    .bienvenida p { font-size: 13px; color: #666; margin-top: 4px; }
+    .badge-fundador { display: inline-block; background: var(--amarillo); color: var(--azul); font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em; text-transform: uppercase; margin-left: 10px; vertical-align: middle; }
+    .badge-plan { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em; text-transform: uppercase; margin-left: 6px; vertical-align: middle; }
+    .badge-presencia { background: #E8E4DB; color: #6B6560; }
+    .badge-visible { background: #DCF0E4; color: #1A4A2A; }
+    .badge-destacado { background: var(--azul); color: var(--amarillo); }
+    .plan-acciones { margin-top: 6px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-mejorar { font-size: 11px; color: var(--azul); text-decoration: underline; cursor: pointer; background: none; border: none; font-family: 'Barlow', sans-serif; padding: 0; }
+    .btn-cambiar-plan { font-size: 11px; color: #888; text-decoration: underline; cursor: pointer; background: none; border: none; font-family: 'Barlow', sans-serif; padding: 0; }
+    .aviso-nuevo { background: #DCF0E4; border: 1px solid #25D366; border-radius: 3px; padding: 12px 14px; margin-bottom: 1.5rem; font-size: 13px; color: #1A4A2A; }
+    .card { background: #fff; border-radius: 4px; border: 1px solid var(--gris-calido); border-left: 4px solid var(--amarillo); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .card h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; color: var(--azul); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-size: 11px; font-weight: 600; color: var(--azul); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+    input, textarea, select { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 3px; font-size: 14px; font-family: 'Barlow', sans-serif; background: #fff; transition: border 0.15s; }
+    textarea { resize: vertical; min-height: 90px; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--azul); }
+    .contador-desc { font-size: 11px; text-align: right; margin-top: 4px; color: #888; }
+    .btn-guardar { background: var(--azul); color: #fff; border: none; border-radius: 3px; padding: 11px 24px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: 'Barlow', sans-serif; transition: background 0.15s; }
+    .btn-guardar:hover { background: var(--azul-medio); }
+    .btn-foto { background: var(--amarillo); color: var(--azul); border: none; border-radius: 3px; padding: 10px 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: 'Barlow', sans-serif; transition: opacity 0.15s; margin-bottom: 1rem; }
+    .btn-foto:hover { opacity: 0.85; }
+    .btn-foto:disabled { opacity: 0.4; cursor: not-allowed; }
+    .fotos-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.5rem; }
+    .foto-item { position: relative; width: 120px; height: 90px; }
+    .foto-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 3px; border: 1px solid var(--gris-calido); }
+    .foto-borrar { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .limite-fotos { font-size: 11px; color: #888; margin-bottom: 0.75rem; }
+    .aviso-plan { font-size: 12px; color: #8a6a00; background: #FFF8DC; border: 1px solid #E8D080; border-radius: 3px; padding: 10px 14px; margin-bottom: 1rem; }
+    .mensaje { padding: 11px; border-radius: 3px; font-size: 13px; margin-top: 1rem; display: none; }
+    .mensaje.ok { background: #DCF0E4; color: #1A4A2A; display: block; }
+    .mensaje.error { background: #F5DCDC; color: #4A1A1A; display: block; }
+    .no-vinculado { text-align: center; padding: 3rem 1.5rem; color: #666; }
+    .no-vinculado h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; color: var(--azul); margin-bottom: 0.5rem; }
+    .ayuda { text-align: center; padding: 1.5rem; font-size: 12px; color: #999; }
+    .ayuda a { color: #999; text-decoration: none; }
+    .ayuda a:hover { color: var(--azul); }
+    .baja-link { text-align: center; padding: 0 1.5rem 2rem; }
+    .baja-link button { background: none; border: none; font-size: 11px; color: #ccc; text-decoration: underline; cursor: pointer; font-family: 'Barlow', sans-serif; }
+    .baja-link button:hover { color: #999; }
+  </style>
+</head>
+<body>
+<header class="header">
+  <div>
+    <div class="logo-nombre">Oficio Local</div>
+    <div class="logo-ciudad">Luján · Buenos Aires</div>
+  </div>
+  <button class="btn-salir" onclick="salir()">Cerrar sesión</button>
+</header>
+
+<div class="container">
+  <div id="cargando" style="text-align:center;padding:3rem;color:#666;">Cargando...</div>
+  <div id="contenido" style="display:none;">
+    <div id="aviso-nuevo" class="aviso-nuevo" style="display:none;">
+      👋 ¡Bienvenido a Oficio Local! Completá tu perfil para aparecer en el directorio.
+    </div>
+    <div class="bienvenida">
+      <h1 id="titulo-nombre">Mi perfil
+        <span class="badge-fundador" id="badge-fundador" style="display:none;">Fundador</span>
+        <span class="badge-plan" id="badge-plan"></span>
+      </h1>
+      <p id="titulo-email"></p>
+      <div class="plan-acciones">
+        <button class="btn-mejorar" id="btn-mejorar" onclick="window.location.href='https://lujan.oficiolocal.com.ar/planes.html'" style="display:none;">↑ Mejorar mi plan</button>
+        <a class="btn-cambiar-plan" id="btn-cambiar-plan" href="#" target="_blank" style="display:none;">¿Querés cambiar tu plan? Escribile a Marcos</a>
+      </div>
+    </div>
+
+    <!-- PANEL ESPECIALISTA -->
+    <div id="panel-especialista">
+      <div class="card">
+        <h2>Datos del perfil</h2>
+        <div class="form-group">
+          <label>Nombre completo *</label>
+          <input type="text" id="f-nombre" placeholder="Tu nombre y apellido"/>
+        </div>
+        <div class="form-group">
+          <label>Rubro principal *</label>
+          <select id="f-rubro-id">
+            <option value="">— Elegí tu rubro —</option>
+            <option value="electricidad">Electricidad</option>
+            <option value="plomeria">Plomería</option>
+            <option value="gas">Gas</option>
+            <option value="albanileria">Construcción</option>
+            <option value="herreria">Herrería</option>
+            <option value="jardineria">Jardinería</option>
+            <option value="pintura">Pintura</option>
+            <option value="carpinteria">Carpintería</option>
+            <option value="cerrajeria">Cerrajería</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupo-rubro-2" style="display:none;">
+          <label>Rubro secundario (opcional)</label>
+          <select id="f-rubro-id-2">
+            <option value="">— Ninguno —</option>
+            <option value="electricidad">Electricidad</option>
+            <option value="plomeria">Plomería</option>
+            <option value="gas">Gas</option>
+            <option value="albanileria">Construcción</option>
+            <option value="herreria">Herrería</option>
+            <option value="jardineria">Jardinería</option>
+            <option value="pintura">Pintura</option>
+            <option value="carpinteria">Carpintería</option>
+            <option value="cerrajeria">Cerrajería</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupo-rubro-3" style="display:none;">
+          <label>Tercer rubro (opcional)</label>
+          <select id="f-rubro-id-3">
+            <option value="">— Ninguno —</option>
+            <option value="electricidad">Electricidad</option>
+            <option value="plomeria">Plomería</option>
+            <option value="gas">Gas</option>
+            <option value="albanileria">Construcción</option>
+            <option value="herreria">Herrería</option>
+            <option value="jardineria">Jardinería</option>
+            <option value="pintura">Pintura</option>
+            <option value="carpinteria">Carpintería</option>
+            <option value="cerrajeria">Cerrajería</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Descripción de tu trabajo *</label>
+          <textarea id="f-descripcion" placeholder="Contá qué hacés y en qué te especializás."></textarea>
+          <div class="contador-desc" id="contador-desc"></div>
+        </div>
+        <div class="form-group">
+          <label>Teléfono (solo números, sin 0 ni 15)</label>
+          <input type="text" id="f-telefono" placeholder="Ej: 2324123456"/>
+        </div>
+        <div class="form-group">
+          <label>Localidad donde trabajás</label>
+          <input type="text" id="f-localidad" placeholder="Luján"/>
+        </div>
+        <div class="form-group">
+          <label>Horario de atención</label>
+          <input type="text" id="f-horario" placeholder="Ej: Lunes a viernes de 8 a 18hs"/>
+        </div>
+        <div class="form-group">
+          <label>Instagram (sin @)</label>
+          <input type="text" id="f-instagram" placeholder="tu_usuario"/>
+        </div>
+        <button class="btn-guardar" onclick="guardar()">Guardar cambios</button>
+        <div id="msg-guardar" class="mensaje"></div>
+      </div>
+
+      <div class="card">
+        <h2>Fotos de trabajos</h2>
+        <p class="limite-fotos" id="limite-texto"></p>
+        <div id="aviso-plan" class="aviso-plan" style="display:none;"></div>
+        <button class="btn-foto" id="btn-agregar-foto" onclick="subirFoto()">+ Agregar foto</button>
+        <div class="fotos-grid" id="fotos-grid"></div>
+        <div id="msg-fotos" class="mensaje"></div>
+      </div>
+    </div>
+
+    <!-- PANEL COMERCIO -->
+    <div id="panel-comercio" style="display:none;">
+      <div class="card">
+        <h2>Datos del negocio</h2>
+        <div class="form-group">
+          <label>Nombre del negocio *</label>
+          <input type="text" id="c-nombre" placeholder="Nombre de tu local o comercio"/>
+        </div>
+        <div class="form-group">
+          <label>Tipo de negocio *</label>
+          <select id="c-subcategoria">
+            <option value="">— Elegí el tipo —</option>
+            <option value="Maderera">Maderera</option>
+            <option value="Pinturería">Pinturería</option>
+            <option value="Ferretería">Ferretería</option>
+            <option value="Corralón">Corralón</option>
+            <option value="Sanitarios">Sanitarios</option>
+            <option value="Herramientas">Herramientas</option>
+            <option value="Electricidad">Electricidad</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Descripción del negocio *</label>
+          <textarea id="c-descripcion" placeholder="Contá qué ofrecés, qué productos o servicios tiene tu negocio."></textarea>
+          <div class="contador-desc" id="c-contador-desc"></div>
+        </div>
+        <div class="form-group">
+          <label>Dirección *</label>
+          <input type="text" id="c-direccion" placeholder="Ej: Av. San Martín 450, Luján"/>
+        </div>
+        <div class="form-group">
+          <label>Horario de atención</label>
+          <input type="text" id="c-horario" placeholder="Ej: Lunes a viernes de 8 a 18hs"/>
+        </div>
+        <div class="form-group">
+          <label>Teléfono (solo números, sin 0 ni 15)</label>
+          <input type="text" id="c-telefono" placeholder="Ej: 2324123456"/>
+        </div>
+        <div class="form-group">
+          <label>Instagram (sin @)</label>
+          <input type="text" id="c-instagram" placeholder="tu_negocio"/>
+        </div>
+        <div class="form-group">
+          <label>Sitio web (opcional)</label>
+          <input type="text" id="c-web" placeholder="Ej: www.tunegocio.com.ar"/>
+        </div>
+        <div class="form-group">
+          <label>Zona de entrega (opcional)</label>
+          <input type="text" id="c-zona-entrega" placeholder="Ej: Luján y alrededores hasta 20km"/>
+        </div>
+        <button class="btn-guardar" onclick="guardarComercio()">Guardar cambios</button>
+        <div id="msg-guardar-comercio" class="mensaje"></div>
+      </div>
+
+      <div class="card">
+        <h2>Fotos del negocio</h2>
+        <p class="limite-fotos" id="c-limite-texto"></p>
+        <div id="c-aviso-plan" class="aviso-plan" style="display:none;"></div>
+        <button class="btn-foto" id="c-btn-agregar-foto" onclick="subirFoto()">+ Agregar foto</button>
+        <div class="fotos-grid" id="fotos-grid"></div>
+        <div id="msg-fotos" class="mensaje"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="no-vinculado" style="display:none;" class="no-vinculado">
+    <h2>Perfil no encontrado</h2>
+    <p>Tu cuenta no está vinculada a ningún perfil. Contactá a Marcos por WhatsApp.</p>
+    <a href="https://wa.me/5492324477461?text=Hola%20Marcos%2C%20me%20registré%20en%20Oficio%20Local%20Luj%C3%A1n%20pero%20mi%20perfil%20no%20aparece." style="display:inline-block;margin-top:1.5rem;background:var(--azul);color:#fff;padding:12px 24px;border-radius:3px;text-decoration:none;font-weight:600;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Contactar a Marcos</a>
+  </div>
+
+  <div class="ayuda">
+    ¿Tenés alguna consulta? <a href="https://wa.me/5492324477461?text=Hola%20Marcos%2C%20tengo%20una%20consulta%20sobre%20mi%20perfil%20en%20Oficio%20Local%20Luj%C3%A1n." target="_blank">Escribile a Marcos</a>
+  </div>
+
+  <div class="baja-link">
+    <button onclick="darDeBaja()">Dar de baja mi perfil</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://bbfhxvvwqcsjwntgyqiy.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_QQBySJVAdsf5AraYE0Kb5A_qVJCH3yd';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const CLOUDINARY_CLOUD = 'dsxydndhk';
+  const CLOUDINARY_PRESET = 'oficiolocal_upload';
+
+  const RUBROS_LABEL = {
+    electricidad: 'Electricidad', plomeria: 'Plomería', gas: 'Gas',
+    albanileria: 'Construcción', herreria: 'Herrería', jardineria: 'Jardinería',
+    pintura: 'Pintura', carpinteria: 'Carpintería', cerrajeria: 'Cerrajería'
+  };
+
+  const LIMITES_DESC = {
+    presencia: 120,
+    visible: 350,
+    destacado: 700,
+    fundador: 350
+  };
+
+  let especialistaId = null;
+  let fotos = [];
+  let maxFotos = 1;
+  let nombreProfesional = '';
+  let planActual = '';
+  let esFundador = false;
+  let esComercio = false;
+
+  function obtenerMaxFotos(plan, fundador) {
+    if (plan === 'destacado') return 8;
+    if (plan === 'visible' || fundador) return 3;
+    return 1;
+  }
+
+  function obtenerLimiteDesc(plan, fundador) {
+    if (fundador) return LIMITES_DESC.fundador;
+    return LIMITES_DESC[plan] || LIMITES_DESC.presencia;
+  }
+
+  function configurarDescripcion(plan, fundador) {
+    const limite = obtenerLimiteDesc(plan, fundador);
+    const textarea = document.getElementById('f-descripcion');
+    const contador = document.getElementById('contador-desc');
+    textarea.setAttribute('maxlength', limite);
+    function actualizarContador() {
+      if (textarea.value.length > limite) textarea.value = textarea.value.slice(0, limite);
+      const usados = textarea.value.length;
+      contador.textContent = usados + ' / ' + limite + ' caracteres';
+      contador.style.color = usados >= limite * 0.9 ? '#c0392b' : '#888';
+    }
+    textarea.addEventListener('input', actualizarContador);
+    actualizarContador();
+  }
+
+  function configurarDescripcionComercio(plan) {
+    const limite = obtenerLimiteDesc(plan, false);
+    const textarea = document.getElementById('c-descripcion');
+    const contador = document.getElementById('c-contador-desc');
+    textarea.setAttribute('maxlength', limite);
+    function actualizarContador() {
+      if (textarea.value.length > limite) textarea.value = textarea.value.slice(0, limite);
+      const usados = textarea.value.length;
+      contador.textContent = usados + ' / ' + limite + ' caracteres';
+      contador.style.color = usados >= limite * 0.9 ? '#c0392b' : '#888';
+    }
+    textarea.addEventListener('input', actualizarContador);
+    actualizarContador();
+  }
+
+  function mostrarRubrosExtra(plan, fundador) {
+    if (plan === 'visible' || plan === 'destacado') {
+      document.getElementById('grupo-rubro-2').style.display = 'block';
+    }
+    if (plan === 'destacado') {
+      document.getElementById('grupo-rubro-3').style.display = 'block';
+    }
+  }
+
+  function formatearTelefono(tel) {
+    let numero = tel.replace(/\D/g, '');
+    if (numero.startsWith('549')) return numero;
+    if (numero.startsWith('54')) return '549' + numero.slice(2);
+    if (numero.startsWith('0')) numero = numero.slice(1);
+    if (numero.startsWith('15')) numero = numero.slice(2);
+    return '549' + numero;
+  }
+
+  async function buscarPerfil(email, intentos) {
+    const { data } = await sb.from('especialistas').select('*').eq('email_auth', email).single();
+    if (!data && intentos > 0) {
+      await new Promise(r => setTimeout(r, 2000));
+      return buscarPerfil(email, intentos - 1);
+    }
+    return data;
+  }
+
+  async function init() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) { window.location.href = 'https://lujan.oficiolocal.com.ar/acceso.html'; return; }
+    document.getElementById('titulo-email').textContent = user.email;
+
+    const data = await buscarPerfil(user.email, 3);
+    document.getElementById('cargando').style.display = 'none';
+
+    if (!data) { document.getElementById('no-vinculado').style.display = 'block'; return; }
+
+    especialistaId = data.id;
+    nombreProfesional = data.nombre || '';
+    planActual = data.plan;
+    esFundador = data.fundador;
+    esComercio = data.rubro_id === 'negocios';
+    maxFotos = obtenerMaxFotos(data.plan, data.fundador);
+    document.getElementById('contenido').style.display = 'block';
+
+    const sinNombre = !data.nombre || data.nombre.trim() === '';
+    if (sinNombre) document.getElementById('aviso-nuevo').style.display = 'block';
+
+    document.getElementById('titulo-nombre').childNodes[0].textContent = (data.nombre || 'Mi perfil') + ' ';
+
+    if (data.fundador) document.getElementById('badge-fundador').style.display = 'inline-block';
+
+    const badgePlan = document.getElementById('badge-plan');
+    const btnMejorar = document.getElementById('btn-mejorar');
+    const btnCambiar = document.getElementById('btn-cambiar-plan');
+
+    if (data.plan === 'destacado') {
+      badgePlan.textContent = 'Destacado';
+      badgePlan.className = 'badge-plan badge-destacado';
+      btnCambiar.style.display = 'inline';
+      btnCambiar.href = `https://wa.me/5492324477461?text=Hola%20Marcos%2C%20soy%20${encodeURIComponent(data.nombre || '')}%20y%20quiero%20cambiar%20mi%20plan%20Destacado%20en%20Luj%C3%A1n.`;
+    } else if (data.plan === 'visible') {
+      badgePlan.textContent = 'Visible';
+      badgePlan.className = 'badge-plan badge-visible';
+      btnMejorar.style.display = 'inline';
+      btnCambiar.style.display = 'inline';
+      btnCambiar.href = `https://wa.me/5492324477461?text=Hola%20Marcos%2C%20soy%20${encodeURIComponent(data.nombre || '')}%20y%20quiero%20cambiar%20mi%20plan%20Visible%20en%20Luj%C3%A1n.`;
+    } else {
+      badgePlan.textContent = 'Presencia';
+      badgePlan.className = 'badge-plan badge-presencia';
+      btnMejorar.style.display = 'inline';
+    }
+
+    if (esComercio) {
+      document.getElementById('panel-especialista').style.display = 'none';
+      document.getElementById('panel-comercio').style.display = 'block';
+      document.getElementById('c-nombre').value = data.nombre || '';
+      document.getElementById('c-subcategoria').value = data.subcategoria || '';
+      document.getElementById('c-descripcion').value = data.descripcion || '';
+      document.getElementById('c-direccion').value = data.direccion || '';
+      document.getElementById('c-horario').value = data.horario || '';
+      document.getElementById('c-telefono').value = data.telefono || '';
+      document.getElementById('c-instagram').value = data.instagram || '';
+      document.getElementById('c-web').value = data.web || '';
+      document.getElementById('c-zona-entrega').value = data.zona_entrega || '';
+      configurarDescripcionComercio(data.plan);
+      document.getElementById('c-descripcion').dispatchEvent(new Event('input'));
+    } else {
+      mostrarRubrosExtra(data.plan, data.fundador);
+      configurarDescripcion(data.plan, data.fundador);
+      document.getElementById('f-nombre').value = data.nombre || '';
+      document.getElementById('f-rubro-id').value = data.rubro_id || '';
+      document.getElementById('f-rubro-id-2').value = data.rubro_id_2 || '';
+      document.getElementById('f-rubro-id-3').value = data.rubro_id_3 || '';
+      document.getElementById('f-descripcion').value = data.descripcion || '';
+      document.getElementById('f-telefono').value = data.telefono || '';
+      document.getElementById('f-localidad').value = data.localidad || 'Luján';
+      document.getElementById('f-horario').value = data.horario || '';
+      document.getElementById('f-instagram').value = data.instagram || '';
+      document.getElementById('f-descripcion').dispatchEvent(new Event('input'));
+    }
+
+    await cargarFotos();
+  }
+
+  async function cargarFotos() {
+    const { data } = await sb.from('fotos').select('*').eq('especialista_id', especialistaId).order('orden');
+    fotos = data || [];
+    renderFotos();
+  }
+
+  function renderFotos() {
+    const grid = document.getElementById('fotos-grid');
+    const limite = document.getElementById(esComercio ? 'c-limite-texto' : 'limite-texto');
+    const btnFoto = document.getElementById(esComercio ? 'c-btn-agregar-foto' : 'btn-agregar-foto');
+    const aviso = document.getElementById(esComercio ? 'c-aviso-plan' : 'aviso-plan');
+
+    limite.textContent = `Tenés ${fotos.length} de ${maxFotos} foto${maxFotos !== 1 ? 's' : ''} cargada${fotos.length !== 1 ? 's' : ''} según tu plan.`;
+
+    if (fotos.length >= maxFotos) {
+      btnFoto.disabled = true;
+      aviso.style.display = 'block';
+      aviso.textContent = maxFotos === 1
+        ? 'Tu plan Presencia incluye 1 foto. Actualizá al Plan Visible para subir hasta 3 fotos.'
+        : maxFotos === 3
+        ? 'Llegaste al límite de 3 fotos. Actualizá al Plan Destacado para subir hasta 8 fotos.'
+        : 'Llegaste al límite de 8 fotos de tu plan.';
+    } else {
+      btnFoto.disabled = false;
+      aviso.style.display = 'none';
+    }
+
+    grid.innerHTML = fotos.map((f, i) =>
+      `<div class="foto-item">
+        <img src="${f.url}" alt="foto ${i+1}"/>
+        <button class="foto-borrar" onclick="borrarFoto(${f.id})">✕</button>
+      </div>`
+    ).join('');
+  }
+
+  async function subirFoto() {
+    if (fotos.length >= maxFotos) return;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const msg = document.getElementById('msg-fotos');
+      msg.className = 'mensaje ok';
+      msg.textContent = 'Subiendo foto...';
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_PRESET);
+      formData.append('folder', 'oficiolocal');
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.secure_url) {
+        await sb.from('fotos').insert({ especialista_id: especialistaId, url: data.secure_url, orden: fotos.length + 1 });
+        await cargarFotos();
+        msg.className = 'mensaje ok';
+        msg.textContent = '¡Foto subida correctamente!';
+      } else {
+        msg.className = 'mensaje error';
+        msg.textContent = 'Error al subir la foto. Intentá de nuevo.';
+      }
+    };
+    input.click();
+  }
+
+  async function borrarFoto(id) {
+    await sb.from('fotos').delete().eq('id', id);
+    await cargarFotos();
+  }
+
+  async function guardar() {
+    const msg = document.getElementById('msg-guardar');
+    msg.className = 'mensaje';
+    const nombre = document.getElementById('f-nombre').value.trim();
+    const rubroId = document.getElementById('f-rubro-id').value;
+    const descripcion = document.getElementById('f-descripcion').value.trim();
+    if (!nombre || !rubroId || !descripcion) {
+      msg.className = 'mensaje error';
+      msg.textContent = 'Completá al menos nombre, rubro y descripción.';
+      return;
+    }
+    const telefonoRaw = document.getElementById('f-telefono').value.trim();
+    const telefono = telefonoRaw ? formatearTelefono(telefonoRaw) : '';
+    const rubroId2 = document.getElementById('f-rubro-id-2').value;
+    const rubroId3 = document.getElementById('f-rubro-id-3').value;
+    const { error } = await sb.from('especialistas').update({
+      nombre, rubro_id: rubroId, rubro: RUBROS_LABEL[rubroId],
+      rubro_id_2: rubroId2 || null, rubro_2: rubroId2 ? RUBROS_LABEL[rubroId2] : null,
+      rubro_id_3: rubroId3 || null, rubro_3: rubroId3 ? RUBROS_LABEL[rubroId3] : null,
+      descripcion, telefono,
+      localidad: document.getElementById('f-localidad').value.trim(),
+      horario: document.getElementById('f-horario').value.trim(),
+      instagram: document.getElementById('f-instagram').value.trim()
+    }).eq('id', especialistaId);
+    if (error) { msg.className = 'mensaje error'; msg.textContent = 'Error al guardar. Intentá de nuevo.'; }
+    else {
+      msg.className = 'mensaje ok';
+      msg.textContent = '¡Cambios guardados correctamente!';
+      document.getElementById('titulo-nombre').childNodes[0].textContent = nombre + ' ';
+      document.getElementById('aviso-nuevo').style.display = 'none';
+    }
+  }
+
+  async function guardarComercio() {
+    const msg = document.getElementById('msg-guardar-comercio');
+    msg.className = 'mensaje';
+    const nombre = document.getElementById('c-nombre').value.trim();
+    const subcategoria = document.getElementById('c-subcategoria').value;
+    const descripcion = document.getElementById('c-descripcion').value.trim();
+    const direccion = document.getElementById('c-direccion').value.trim();
+    if (!nombre || !subcategoria || !descripcion || !direccion) {
+      msg.className = 'mensaje error';
+      msg.textContent = 'Completá nombre, tipo de negocio, descripción y dirección.';
+      return;
+    }
+    const telefonoRaw = document.getElementById('c-telefono').value.trim();
+    const telefono = telefonoRaw ? formatearTelefono(telefonoRaw) : '';
+    const { error } = await sb.from('especialistas').update({
+      nombre, subcategoria, descripcion, direccion, telefono,
+      horario: document.getElementById('c-horario').value.trim(),
+      instagram: document.getElementById('c-instagram').value.trim(),
+      web: document.getElementById('c-web').value.trim(),
+      zona_entrega: document.getElementById('c-zona-entrega').value.trim()
+    }).eq('id', especialistaId);
+    if (error) { msg.className = 'mensaje error'; msg.textContent = 'Error al guardar. Intentá de nuevo.'; }
+    else {
+      msg.className = 'mensaje ok';
+      msg.textContent = '¡Cambios guardados correctamente!';
+      document.getElementById('titulo-nombre').childNodes[0].textContent = nombre + ' ';
+      document.getElementById('aviso-nuevo').style.display = 'none';
+    }
+  }
+
+  async function darDeBaja() {
+    const confirmado = confirm('¿Estás seguro que querés dar de baja tu perfil? Va a dejar de aparecer en el directorio.');
+    if (!confirmado) return;
+    const { error } = await sb.from('especialistas').update({ activo: false }).eq('id', especialistaId);
+    if (error) { alert('Hubo un error. Intentá de nuevo o contactá a Marcos.'); return; }
+    await sb.auth.signOut();
+    if (planActual === 'visible' || planActual === 'destacado') {
+      window.location.href = 'https://www.mercadopago.com.ar/subscriptions';
+    } else {
+      window.location.href = 'https://lujan.oficiolocal.com.ar';
+    }
+  }
+
+  async function salir() {
+    await sb.auth.signOut();
+    window.location.href = 'https://lujan.oficiolocal.com.ar/acceso.html';
+  }
+
+  init();
+</script>
+</body>
+</html>
