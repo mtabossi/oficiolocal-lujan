@@ -26,12 +26,38 @@
     .logo-nombre { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
     .logo-ciudad { font-size: 11px; color: var(--amarillo); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-top: 4px; }
     .header-tagline { font-family: 'Lora', serif; font-size: 15px; font-style: italic; color: rgba(255,255,255,0.5); margin-top: 1rem; }
+
     .chips-bar { background: var(--azul-medio); border-bottom: 3px solid var(--amarillo); }
     .chips-inner { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; display: flex; overflow-x: auto; scrollbar-width: none; }
     .chips-inner::-webkit-scrollbar { display: none; }
     .chip { flex-shrink: 0; padding: 13px 18px; border: none; background: transparent; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Barlow', sans-serif; cursor: pointer; color: rgba(255,255,255,0.55); border-bottom: 3px solid transparent; margin-bottom: -3px; transition: all 0.15s; }
     .chip:hover { color: rgba(255,255,255,0.9); }
     .chip.active { color: var(--amarillo); border-bottom-color: var(--amarillo); }
+
+    .filtro-mobile-bar { display: none; background: var(--azul-medio); border-bottom: 3px solid var(--amarillo); padding: 0 1.5rem; }
+    .filtro-mobile-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 0; border: none; background: transparent; color: rgba(255,255,255,0.85); font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; justify-content: space-between; }
+    .filtro-mobile-btn .rubro-activo { color: var(--amarillo); }
+    .filtro-mobile-btn svg { width: 16px; height: 16px; fill: none; stroke: rgba(255,255,255,0.6); stroke-width: 2; flex-shrink: 0; }
+
+    .sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+    .sheet-overlay.open { display: block; }
+    .sheet { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-radius: 16px 16px 0 0; z-index: 1001; padding: 0 0 env(safe-area-inset-bottom, 16px); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1); max-height: 85vh; overflow-y: auto; }
+    .sheet.open { transform: translateY(0); }
+    .sheet-handle { width: 40px; height: 4px; background: var(--gris-calido); border-radius: 2px; margin: 12px auto 0; }
+    .sheet-titulo { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--azul); letter-spacing: 0.06em; text-transform: uppercase; padding: 16px 1.5rem 12px; border-bottom: 1px solid var(--gris-calido); }
+    .sheet-rubros { padding: 8px 0 8px; }
+    .sheet-rubro { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 14px 1.5rem; border: none; background: transparent; font-family: 'Barlow', sans-serif; font-size: 15px; font-weight: 500; color: var(--texto); cursor: pointer; text-align: left; transition: background 0.1s; }
+    .sheet-rubro:hover { background: var(--blanco-roto); }
+    .sheet-rubro.active { color: var(--azul); font-weight: 700; }
+    .sheet-rubro .check-icon { width: 20px; height: 20px; border-radius: 50%; background: var(--amarillo); display: none; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sheet-rubro.active .check-icon { display: flex; }
+    .sheet-rubro .check-icon svg { width: 12px; height: 12px; fill: none; stroke: var(--azul); stroke-width: 2.5; }
+
+    @media (max-width: 640px) {
+      .chips-bar { display: none; }
+      .filtro-mobile-bar { display: block; }
+    }
+
     .main { max-width: 680px; margin: 0 auto; }
     .results-bar { padding: 1.25rem 1.5rem 0.5rem; }
     .results-count { font-size: 11px; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 0.12em; }
@@ -80,10 +106,19 @@
   </style>
 </head>
 <body>
+
 <div id="lb" class="lightbox" onclick="cerrarLb()">
   <button class="lightbox-close" onclick="cerrarLb()">&#x2715;</button>
   <img id="lb-img" src="" alt=""/>
 </div>
+
+<div class="sheet-overlay" id="sheet-overlay" onclick="cerrarSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-titulo">Filtrar por rubro</div>
+  <div class="sheet-rubros" id="sheet-rubros"></div>
+</div>
+
 <header class="header">
   <div class="header-grid"></div>
   <div class="header-inner">
@@ -104,17 +139,28 @@
     <p class="header-tagline">El profesional que necesitás, a una llamada de distancia.</p>
   </div>
 </header>
+
 <nav class="chips-bar">
   <div class="chips-inner" id="chips"></div>
 </nav>
+
+<div class="filtro-mobile-bar">
+  <button class="filtro-mobile-btn" onclick="abrirSheet()">
+    <span>Rubro: <span class="rubro-activo" id="rubro-label-mobile">Todos</span></span>
+    <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
 <main class="main">
   <div class="results-bar"><span class="results-count" id="label"></span></div>
   <div class="card-list" id="lista"></div>
   <footer class="footer">Oficio Local · <span>Luján</span> · información provista por cada profesional</footer>
 </main>
+
 <a class="btn-sumate" href="planes.html">
   ¿Sos especialista? Sumate
 </a>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://bbfhxvvwqcsjwntgyqiy.supabase.co';
@@ -140,6 +186,38 @@
 
   function abrirLb(src){ document.getElementById('lb-img').src=src; document.getElementById('lb').classList.add('open'); }
   function cerrarLb(){ document.getElementById('lb').classList.remove('open'); }
+
+  function abrirSheet() {
+    document.getElementById('sheet').classList.add('open');
+    document.getElementById('sheet-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderSheet();
+  }
+
+  function cerrarSheet() {
+    document.getElementById('sheet').classList.remove('open');
+    document.getElementById('sheet-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function renderSheet() {
+    document.getElementById('sheet-rubros').innerHTML = RUBROS.map(r => `
+      <button class="sheet-rubro ${r.id === rubroActivo ? 'active' : ''}" onclick="elegirRubroSheet('${r.id}', '${r.label}')">
+        <span>${r.label}</span>
+        <span class="check-icon">
+          <svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
+        </span>
+      </button>
+    `).join('');
+  }
+
+  function elegirRubroSheet(id, label) {
+    rubroActivo = id;
+    document.getElementById('rubro-label-mobile').textContent = label;
+    cerrarSheet();
+    renderChips();
+    filtrar();
+  }
 
   function iniciales(nombre) {
     return nombre.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
@@ -245,7 +323,13 @@
     ).join('');
   }
 
-  function setRubro(r) { rubroActivo = r; renderChips(); filtrar(); }
+  function setRubro(r) {
+    rubroActivo = r;
+    const label = RUBROS.find(x => x.id === r)?.label || 'Todos';
+    document.getElementById('rubro-label-mobile').textContent = label;
+    renderChips();
+    filtrar();
+  }
 
   function filtrar() {
     const lista = document.getElementById('lista');
