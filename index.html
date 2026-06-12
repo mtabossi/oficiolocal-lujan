@@ -26,25 +26,30 @@
     .logo-nombre { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
     .logo-ciudad { font-size: 11px; color: var(--amarillo); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-top: 4px; }
     .header-tagline { font-family: 'Lora', serif; font-size: 15px; font-style: italic; color: rgba(255,255,255,0.5); margin-top: 1rem; }
-
     .chips-bar { background: var(--azul-medio); border-bottom: 3px solid var(--amarillo); }
     .chips-inner { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; display: flex; overflow-x: auto; scrollbar-width: none; }
     .chips-inner::-webkit-scrollbar { display: none; }
     .chip { flex-shrink: 0; padding: 13px 18px; border: none; background: transparent; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Barlow', sans-serif; cursor: pointer; color: rgba(255,255,255,0.55); border-bottom: 3px solid transparent; margin-bottom: -3px; transition: all 0.15s; }
     .chip:hover { color: rgba(255,255,255,0.9); }
     .chip.active { color: var(--amarillo); border-bottom-color: var(--amarillo); }
-
+    .subchips-bar { background: var(--azul); border-bottom: 2px solid rgba(232,184,75,0.3); display: none; }
+    .subchips-bar.visible { display: block; }
+    .subchips-inner { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; display: flex; overflow-x: auto; scrollbar-width: none; }
+    .subchips-inner::-webkit-scrollbar { display: none; }
+    .subchip { flex-shrink: 0; padding: 10px 14px; border: none; background: transparent; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Barlow', sans-serif; cursor: pointer; color: rgba(255,255,255,0.45); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+    .subchip:hover { color: rgba(255,255,255,0.8); }
+    .subchip.active { color: var(--amarillo); border-bottom-color: var(--amarillo); }
     .filtro-mobile-bar { display: none; background: var(--azul-medio); border-bottom: 3px solid var(--amarillo); padding: 0 1.5rem; }
     .filtro-mobile-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 0; border: none; background: transparent; color: rgba(255,255,255,0.85); font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; justify-content: space-between; }
     .filtro-mobile-btn .rubro-activo { color: var(--amarillo); }
     .filtro-mobile-btn svg { width: 16px; height: 16px; fill: none; stroke: rgba(255,255,255,0.6); stroke-width: 2; flex-shrink: 0; }
-
     .sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
     .sheet-overlay.open { display: block; }
     .sheet { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-radius: 16px 16px 0 0; z-index: 1001; padding: 0 0 env(safe-area-inset-bottom, 16px); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1); max-height: 85vh; overflow-y: auto; }
     .sheet.open { transform: translateY(0); }
     .sheet-handle { width: 40px; height: 4px; background: var(--gris-calido); border-radius: 2px; margin: 12px auto 0; }
-    .sheet-titulo { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--azul); letter-spacing: 0.06em; text-transform: uppercase; padding: 16px 1.5rem 12px; border-bottom: 1px solid var(--gris-calido); }
+    .sheet-titulo { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--azul); letter-spacing: 0.06em; text-transform: uppercase; padding: 16px 1.5rem 12px; border-bottom: 1px solid var(--gris-calido); display: flex; align-items: center; gap: 10px; }
+    .sheet-back { background: none; border: none; cursor: pointer; color: var(--azul); font-size: 18px; padding: 0; line-height: 1; }
     .sheet-rubros { padding: 8px 0 8px; }
     .sheet-rubro { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 14px 1.5rem; border: none; background: transparent; font-family: 'Barlow', sans-serif; font-size: 15px; font-weight: 500; color: var(--texto); cursor: pointer; text-align: left; transition: background 0.1s; }
     .sheet-rubro:hover { background: var(--blanco-roto); }
@@ -52,12 +57,12 @@
     .sheet-rubro .check-icon { width: 20px; height: 20px; border-radius: 50%; background: var(--amarillo); display: none; align-items: center; justify-content: center; flex-shrink: 0; }
     .sheet-rubro.active .check-icon { display: flex; }
     .sheet-rubro .check-icon svg { width: 12px; height: 12px; fill: none; stroke: var(--azul); stroke-width: 2.5; }
-
+    .sheet-rubro .arrow-icon { color: var(--gris-texto); font-size: 16px; }
     @media (max-width: 640px) {
       .chips-bar { display: none; }
+      .subchips-bar { display: none !important; }
       .filtro-mobile-bar { display: block; }
     }
-
     .main { max-width: 680px; margin: 0 auto; }
     .results-bar { padding: 1.25rem 1.5rem 0.5rem; }
     .results-count { font-size: 11px; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 0.12em; }
@@ -115,7 +120,7 @@
 <div class="sheet-overlay" id="sheet-overlay" onclick="cerrarSheet()"></div>
 <div class="sheet" id="sheet">
   <div class="sheet-handle"></div>
-  <div class="sheet-titulo">Filtrar por rubro</div>
+  <div class="sheet-titulo" id="sheet-titulo">Filtrar por rubro</div>
   <div class="sheet-rubros" id="sheet-rubros"></div>
 </div>
 
@@ -142,6 +147,10 @@
 
 <nav class="chips-bar">
   <div class="chips-inner" id="chips"></div>
+</nav>
+
+<nav class="subchips-bar" id="subchips-bar">
+  <div class="subchips-inner" id="subchips"></div>
 </nav>
 
 <div class="filtro-mobile-bar">
@@ -181,16 +190,43 @@
     { id: 'negocios', label: 'Negocios del oficio' }
   ];
 
+  const SUBCATEGORIAS = [
+    { id: 'todas', label: 'Todos' },
+    { id: 'Maderera', label: 'Maderera' },
+    { id: 'Pinturería', label: 'Pinturería' },
+    { id: 'Ferretería', label: 'Ferretería' },
+    { id: 'Corralón', label: 'Corralón' },
+    { id: 'Sanitarios', label: 'Sanitarios' },
+    { id: 'Herramientas', label: 'Herramientas' },
+    { id: 'Electricidad', label: 'Electricidad' },
+    { id: 'Otros', label: 'Otros' }
+  ];
+
   let todos = [];
   let rubroActivo = 'todos';
+  let subcategoriaActiva = 'todas';
 
   function abrirLb(src){ document.getElementById('lb-img').src=src; document.getElementById('lb').classList.add('open'); }
   function cerrarLb(){ document.getElementById('lb').classList.remove('open'); }
 
   function abrirSheet() {
+    document.getElementById('sheet-titulo').innerHTML = 'Filtrar por rubro';
     document.getElementById('sheet').classList.add('open');
     document.getElementById('sheet-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+    renderSheet();
+  }
+
+  function abrirSheetSubcategorias() {
+    document.getElementById('sheet-titulo').innerHTML = '<button class="sheet-back" onclick="volverARubros()">←</button> Tipo de negocio';
+    document.getElementById('sheet').classList.add('open');
+    document.getElementById('sheet-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderSheetSubcategorias();
+  }
+
+  function volverARubros() {
+    document.getElementById('sheet-titulo').innerHTML = 'Filtrar por rubro';
     renderSheet();
   }
 
@@ -202,20 +238,51 @@
 
   function renderSheet() {
     document.getElementById('sheet-rubros').innerHTML = RUBROS.map(r => `
-      <button class="sheet-rubro ${r.id === rubroActivo ? 'active' : ''}" onclick="elegirRubroSheet('${r.id}', '${r.label}')">
+      <button class="sheet-rubro ${r.id === rubroActivo ? 'active' : ''}" onclick="${r.id === 'negocios' ? 'elegirNegociosSheet()' : `elegirRubroSheet('${r.id}', '${r.label}')`}">
         <span>${r.label}</span>
-        <span class="check-icon">
-          <svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg>
-        </span>
+        ${r.id === 'negocios'
+          ? '<span class="arrow-icon">›</span>'
+          : `<span class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>`
+        }
       </button>
     `).join('');
   }
 
+  function renderSheetSubcategorias() {
+    document.getElementById('sheet-rubros').innerHTML = SUBCATEGORIAS.map(s => `
+      <button class="sheet-rubro ${s.id === subcategoriaActiva ? 'active' : ''}" onclick="elegirSubcategoriaSheet('${s.id}', '${s.label}')">
+        <span>${s.label}</span>
+        <span class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>
+      </button>
+    `).join('');
+  }
+
+  function elegirNegociosSheet() {
+    rubroActivo = 'negocios';
+    subcategoriaActiva = 'todas';
+    renderChips();
+    renderSubchips();
+    filtrar();
+    abrirSheetSubcategorias();
+  }
+
+  function elegirSubcategoriaSheet(id, label) {
+    subcategoriaActiva = id;
+    const labelMobile = id === 'todas' ? 'Negocios del oficio' : `Negocios · ${label}`;
+    document.getElementById('rubro-label-mobile').textContent = labelMobile;
+    cerrarSheet();
+    renderChips();
+    renderSubchips();
+    filtrar();
+  }
+
   function elegirRubroSheet(id, label) {
     rubroActivo = id;
+    subcategoriaActiva = 'todas';
     document.getElementById('rubro-label-mobile').textContent = label;
     cerrarSheet();
     renderChips();
+    renderSubchips();
     filtrar();
   }
 
@@ -323,11 +390,31 @@
     ).join('');
   }
 
+  function renderSubchips() {
+    const bar = document.getElementById('subchips-bar');
+    if (rubroActivo !== 'negocios') {
+      bar.classList.remove('visible');
+      return;
+    }
+    bar.classList.add('visible');
+    document.getElementById('subchips').innerHTML = SUBCATEGORIAS.map(s =>
+      `<button class="subchip ${s.id === subcategoriaActiva ? 'active' : ''}" onclick="setSubcategoria('${s.id}')">${s.label}</button>`
+    ).join('');
+  }
+
   function setRubro(r) {
     rubroActivo = r;
+    subcategoriaActiva = 'todas';
     const label = RUBROS.find(x => x.id === r)?.label || 'Todos';
     document.getElementById('rubro-label-mobile').textContent = label;
     renderChips();
+    renderSubchips();
+    filtrar();
+  }
+
+  function setSubcategoria(s) {
+    subcategoriaActiva = s;
+    renderSubchips();
     filtrar();
   }
 
@@ -339,6 +426,9 @@
       filtrados = todos.filter(p => p.rubro_id !== 'negocios');
     } else if (rubroActivo === 'negocios') {
       filtrados = todos.filter(p => p.rubro_id === 'negocios');
+      if (subcategoriaActiva !== 'todas') {
+        filtrados = filtrados.filter(p => p.subcategoria === subcategoriaActiva);
+      }
     } else {
       filtrados = todos.filter(p =>
         p.rubro_id !== 'negocios' && (
@@ -386,6 +476,7 @@
       fotos: fotos.filter(f => f.especialista_id === e.id)
     }));
     renderChips();
+    renderSubchips();
     filtrar();
   }
 
