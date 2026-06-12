@@ -346,6 +346,8 @@
     let badges = '';
     if (p.rubro_id === 'negocios' && p.subcategoria) {
       badges += `<span class="badge-subcategoria">${p.subcategoria}</span>`;
+      if (p.plan === 'destacado') badges += '<span class="badge-destacado">Destacado</span>';
+      if (p.plan === 'visible') badges += '<span class="badge-visible">Visible</span>';
     } else {
       if (p.fundador) badges += '<span class="badge-fundador">Fundador</span>';
       if (p.plan === 'destacado') badges += '<span class="badge-destacado">Destacado</span>';
@@ -353,6 +355,7 @@
       if (p.plan === 'presencia') badges += '<span class="badge-presencia">Presencia</span>';
     }
     return badges;
+  }
   }
 
   function renderCardComercio(p) {
