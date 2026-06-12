@@ -219,9 +219,6 @@
 
   function abrirSheetSubcategorias() {
     document.getElementById('sheet-titulo').innerHTML = '<button class="sheet-back" onclick="volverARubros()">←</button> Tipo de negocio';
-    document.getElementById('sheet').classList.add('open');
-    document.getElementById('sheet-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
     renderSheetSubcategorias();
   }
 
@@ -238,11 +235,11 @@
 
   function renderSheet() {
     document.getElementById('sheet-rubros').innerHTML = RUBROS.map(r => `
-      <button class="sheet-rubro ${r.id === rubroActivo ? 'active' : ''}" onclick="${r.id === 'negocios' ? 'elegirNegociosSheet()' : `elegirRubroSheet('${r.id}', '${r.label}')`}">
+      <button class="sheet-rubro ${r.id === rubroActivo ? 'active' : ''}" onclick="${r.id === 'negocios' ? 'elegirNegociosSheet()' : "elegirRubroSheet('" + r.id + "', '" + r.label + "')"}">
         <span>${r.label}</span>
         ${r.id === 'negocios'
           ? '<span class="arrow-icon">›</span>'
-          : `<span class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>`
+          : '<span class="check-icon"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>'
         }
       </button>
     `).join('');
@@ -268,7 +265,7 @@
 
   function elegirSubcategoriaSheet(id, label) {
     subcategoriaActiva = id;
-    const labelMobile = id === 'todas' ? 'Negocios del oficio' : `Negocios · ${label}`;
+    const labelMobile = id === 'todas' ? 'Negocios del oficio' : 'Negocios · ' + label;
     document.getElementById('rubro-label-mobile').textContent = labelMobile;
     cerrarSheet();
     renderChips();
@@ -314,18 +311,14 @@
     if (!desc) return '';
     if (p.fundador) {
       const limite = 350;
-      if (desc.length <= limite) return `<p class="card-desc">${desc}</p>`;
+      if (desc.length <= limite) return '<p class="card-desc">' + desc + '</p>';
       const corto = cortarTexto(desc, limite);
       const id = 'desc-' + p.id;
-      return `
-        <p class="card-desc" id="${id}-corto">${corto}</p>
-        <p class="card-desc" id="${id}-completo" style="display:none;">${desc}</p>
-        <button class="btn-ver-mas" onclick="toggleDesc('${id}', this)">Ver más</button>
-      `;
+      return '<p class="card-desc" id="' + id + '-corto">' + corto + '</p><p class="card-desc" id="' + id + '-completo" style="display:none;">' + desc + '</p><button class="btn-ver-mas" onclick="toggleDesc(\'' + id + '\', this)">Ver más</button>';
     }
-    if (p.plan === 'destacado') return `<p class="card-desc">${cortarTexto(desc, 700)}</p>`;
-    if (p.plan === 'visible') return `<p class="card-desc">${cortarTexto(desc, 350)}</p>`;
-    return `<p class="card-desc">${cortarTexto(desc, 120)}</p>`;
+    if (p.plan === 'destacado') return '<p class="card-desc">' + cortarTexto(desc, 700) + '</p>';
+    if (p.plan === 'visible') return '<p class="card-desc">' + cortarTexto(desc, 350) + '</p>';
+    return '<p class="card-desc">' + cortarTexto(desc, 120) + '</p>';
   }
 
   function toggleDesc(id, btn) {
@@ -345,7 +338,7 @@
   function renderBadges(p) {
     let badges = '';
     if (p.rubro_id === 'negocios' && p.subcategoria) {
-      badges += `<span class="badge-subcategoria">${p.subcategoria}</span>`;
+      badges += '<span class="badge-subcategoria">' + p.subcategoria + '</span>';
       if (p.plan === 'destacado') badges += '<span class="badge-destacado">Destacado</span>';
       if (p.plan === 'visible') badges += '<span class="badge-visible">Visible</span>';
     } else {
@@ -356,40 +349,14 @@
     }
     return badges;
   }
-  }
 
   function renderCardComercio(p) {
-    return `
-      <div class="card">
-        <div class="card-body">
-          <div class="card-top">
-            <div class="avatar">${iniciales(p.nombre)}</div>
-            <div class="card-meta">
-              <div class="card-name">${p.nombre}${renderBadges(p)}</div>
-              <div class="card-rubro">${p.subcategoria || 'Negocio del oficio'}</div>
-            </div>
-          </div>
-          ${renderDesc(p)}
-          ${p.direccion ? `<p class="direccion">📍 ${p.direccion}</p>` : ''}
-          ${p.horario ? `<p class="direccion">🕐 ${p.horario}</p>` : ''}
-          <div class="card-footer" style="margin-top:12px;">
-            <span></span>
-            <a class="wa-btn" href="https://wa.me/${p.telefono}" target="_blank" onclick="trackWhatsapp('${p.nombre.replace(/'/g, "\\'")}')">
-              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L.053 23.447a.5.5 0 00.605.605l5.594-1.479A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.87 9.87 0 01-5.031-1.378l-.36-.214-3.732.986.998-3.648-.235-.374A9.861 9.861 0 012.1 12C2.1 6.532 6.532 2.1 12 2.1c5.468 0 9.9 4.432 9.9 9.9 0 5.468-4.432 9.9-9.9 9.9z"/></svg>
-              Contactar
-            </a>
-          </div>
-          ${p.instagram ? `<a class="ig-link" href="https://instagram.com/${p.instagram}" target="_blank">📷 @${p.instagram}</a>` : ''}
-          ${p.web ? `<a class="web-link" href="${p.web}" target="_blank">🌐 ${p.web}</a>` : ''}
-        </div>
-        ${p.fotos && p.fotos.length ? `<div class="fotos-row">${p.fotos.map(f => `<img class="foto-thumb" src="${f.url}" onclick="abrirLb(this.src)" alt="foto" loading="lazy"/>`).join('')}</div>` : ''}
-      </div>
-    `;
+    return '<div class="card"><div class="card-body"><div class="card-top"><div class="avatar">' + iniciales(p.nombre) + '</div><div class="card-meta"><div class="card-name">' + p.nombre + renderBadges(p) + '</div><div class="card-rubro">' + (p.subcategoria || 'Negocio del oficio') + '</div></div></div>' + renderDesc(p) + (p.direccion ? '<p class="direccion">📍 ' + p.direccion + '</p>' : '') + (p.horario ? '<p class="direccion">🕐 ' + p.horario + '</p>' : '') + '<div class="card-footer" style="margin-top:12px;"><span></span><a class="wa-btn" href="https://wa.me/' + p.telefono + '" target="_blank" onclick="trackWhatsapp(\'' + p.nombre.replace(/'/g, "\\'") + '\')"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L.053 23.447a.5.5 0 00.605.605l5.594-1.479A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.87 9.87 0 01-5.031-1.378l-.36-.214-3.732.986.998-3.648-.235-.374A9.861 9.861 0 012.1 12C2.1 6.532 6.532 2.1 12 2.1c5.468 0 9.9 4.432 9.9 9.9 0 5.468-4.432 9.9-9.9 9.9z"/></svg>Contactar</a></div>' + (p.instagram ? '<a class="ig-link" href="https://instagram.com/' + p.instagram + '" target="_blank">📷 @' + p.instagram + '</a>' : '') + (p.web ? '<a class="web-link" href="' + p.web + '" target="_blank">🌐 ' + p.web + '</a>' : '') + '</div>' + (p.fotos && p.fotos.length ? '<div class="fotos-row">' + p.fotos.map(f => '<img class="foto-thumb" src="' + f.url + '" onclick="abrirLb(this.src)" alt="foto" loading="lazy"/>').join('') + '</div>' : '') + '</div>';
   }
 
   function renderChips() {
     document.getElementById('chips').innerHTML = RUBROS.map(r =>
-      `<button class="chip ${r.id === rubroActivo ? 'active' : ''}" onclick="setRubro('${r.id}')">${r.label}</button>`
+      '<button class="chip ' + (r.id === rubroActivo ? 'active' : '') + '" onclick="setRubro(\'' + r.id + '\')">' + r.label + '</button>'
     ).join('');
   }
 
@@ -401,14 +368,14 @@
     }
     bar.classList.add('visible');
     document.getElementById('subchips').innerHTML = SUBCATEGORIAS.map(s =>
-      `<button class="subchip ${s.id === subcategoriaActiva ? 'active' : ''}" onclick="setSubcategoria('${s.id}')">${s.label}</button>`
+      '<button class="subchip ' + (s.id === subcategoriaActiva ? 'active' : '') + '" onclick="setSubcategoria(\'' + s.id + '\')">' + s.label + '</button>'
     ).join('');
   }
 
   function setRubro(r) {
     rubroActivo = r;
     subcategoriaActiva = 'todas';
-    const label = RUBROS.find(x => x.id === r)?.label || 'Todos';
+    const label = RUBROS.find(x => x.id === r) ? RUBROS.find(x => x.id === r).label : 'Todos';
     document.getElementById('rubro-label-mobile').textContent = label;
     renderChips();
     renderSubchips();
@@ -445,30 +412,10 @@
       lista.innerHTML = '<div class="empty">No hay ' + (rubroActivo === 'negocios' ? 'negocios' : 'profesionales') + ' en esta categoría todavía.</div>';
       return;
     }
-    lista.innerHTML = filtrados.map(p =>
-      p.rubro_id === 'negocios' ? renderCardComercio(p) : `
-      <div class="card">
-        <div class="card-body">
-          <div class="card-top">
-            <div class="avatar">${iniciales(p.nombre)}</div>
-            <div class="card-meta">
-              <div class="card-name">${p.nombre}${renderBadges(p)}</div>
-              <div class="card-rubro">${p.rubro}</div>
-            </div>
-          </div>
-          ${renderDesc(p)}
-          <div class="card-footer">
-            <span class="precio"><strong>A convenir</strong></span>
-            <a class="wa-btn" href="https://wa.me/${p.telefono}" target="_blank" onclick="trackWhatsapp('${p.nombre.replace(/'/g, "\\'")}')">
-              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L.053 23.447a.5.5 0 00.605.605l5.594-1.479A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.87 9.87 0 01-5.031-1.378l-.36-.214-3.732.986.998-3.648-.235-.374A9.861 9.861 0 012.1 12C2.1 6.532 6.532 2.1 12 2.1c5.468 0 9.9 4.432 9.9 9.9 0 5.468-4.432 9.9-9.9 9.9z"/></svg>
-              Contactar
-            </a>
-          </div>
-          ${p.instagram ? `<a class="ig-link" href="https://instagram.com/${p.instagram}" target="_blank">📷 @${p.instagram}</a>` : ''}
-        </div>
-        ${p.fotos && p.fotos.length ? `<div class="fotos-row">${p.fotos.map(f => `<img class="foto-thumb" src="${f.url}" onclick="abrirLb(this.src)" alt="trabajo" loading="lazy"/>`).join('')}</div>` : ''}
-      </div>
-    `).join('');
+    lista.innerHTML = filtrados.map(p => {
+      if (p.rubro_id === 'negocios') return renderCardComercio(p);
+      return '<div class="card"><div class="card-body"><div class="card-top"><div class="avatar">' + iniciales(p.nombre) + '</div><div class="card-meta"><div class="card-name">' + p.nombre + renderBadges(p) + '</div><div class="card-rubro">' + p.rubro + '</div></div></div>' + renderDesc(p) + '<div class="card-footer"><span class="precio"><strong>A convenir</strong></span><a class="wa-btn" href="https://wa.me/' + p.telefono + '" target="_blank" onclick="trackWhatsapp(\'' + p.nombre.replace(/'/g, "\\'") + '\')"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L.053 23.447a.5.5 0 00.605.605l5.594-1.479A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.87 9.87 0 01-5.031-1.378l-.36-.214-3.732.986.998-3.648-.235-.374A9.861 9.861 0 012.1 12C2.1 6.532 6.532 2.1 12 2.1c5.468 0 9.9 4.432 9.9 9.9 0 5.468-4.432 9.9-9.9 9.9z"/></svg>Contactar</a></div>' + (p.instagram ? '<a class="ig-link" href="https://instagram.com/' + p.instagram + '" target="_blank">📷 @' + p.instagram + '</a>' : '') + '</div>' + (p.fotos && p.fotos.length ? '<div class="fotos-row">' + p.fotos.map(f => '<img class="foto-thumb" src="' + f.url + '" onclick="abrirLb(this.src)" alt="trabajo" loading="lazy"/>').join('') + '</div>' : '') + '</div>';
+    }).join('');
   }
 
   async function cargar() {
