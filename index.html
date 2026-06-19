@@ -187,6 +187,7 @@
     { id: 'pintura', label: 'Pintura' },
     { id: 'carpinteria', label: 'Carpintería' },
     { id: 'cerrajeria', label: 'Cerrajería' },
+    { id: 'refrigeracion', label: 'Refrigeración' },
     { id: 'negocios', label: 'Negocios del oficio' }
   ];
 
@@ -295,7 +296,7 @@
   }
 
   function trackWhatsapp(nombre) {
-    gtag('event', 'click_whatsapp', { nombre: nombre });
+    gtag('event', 'click_whatsapp', { 'Profesional': nombre });
   }
 
   function cortarTexto(texto, limite) {
