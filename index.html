@@ -106,6 +106,9 @@
     .empty { padding: 3rem 1.5rem; text-align: center; color: var(--gris-texto); font-size: 14px; font-family: 'Lora', serif; font-style: italic; }
     .footer { text-align: center; padding: 2rem 1.5rem 1.5rem; font-size: 11px; color: var(--gris-texto); letter-spacing: 0.08em; text-transform: uppercase; border-top: 1px solid var(--gris-calido); margin-top: 1rem; }
     .footer span { color: var(--amarillo); }
+    .footer-rubros { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; margin-bottom: 1.25rem; }
+    .footer-rubros a { font-size: 11px; color: var(--gris-texto); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; }
+    .footer-rubros a:hover { color: var(--azul); }
     .btn-sumate { position: fixed; bottom: 24px; right: 20px; z-index: 998; display: flex; align-items: center; gap: 10px; background: var(--amarillo); color: var(--azul); font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 20px; border-radius: 50px; text-decoration: none; box-shadow: 0 4px 16px rgba(27,46,75,0.35); transition: all 0.15s; }
     .btn-sumate:hover { opacity: 0.9; transform: translateY(-2px); }
   </style>
@@ -163,7 +166,21 @@
 <main class="main">
   <div class="results-bar"><span class="results-count" id="label"></span></div>
   <div class="card-list" id="lista"></div>
-  <footer class="footer">Oficio Local · <span>Luján</span> · información provista por cada profesional</footer>
+  <footer class="footer">
+    <div class="footer-rubros">
+      <a href="/electricistas.html">Electricistas en Luján</a>
+      <a href="/plomeros.html">Plomeros en Luján</a>
+      <a href="/gasistas.html">Gasistas en Luján</a>
+      <a href="/albaniles.html">Albañiles en Luján</a>
+      <a href="/herreros.html">Herreros en Luján</a>
+      <a href="/pintores.html">Pintores en Luján</a>
+      <a href="/carpinteros.html">Carpinteros en Luján</a>
+      <a href="/cerrajeros.html">Cerrajeros en Luján</a>
+      <a href="/jardineros.html">Jardineros en Luján</a>
+      <a href="/refrigeracion.html">Refrigeración en Luján</a>
+    </div>
+    Oficio Local · <span>Luján</span> · información provista por cada profesional
+  </footer>
 </main>
 
 <a class="btn-sumate" href="planes.html">
